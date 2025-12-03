@@ -1,0 +1,66 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="header-title">Candidate</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="candidate-list-container">
+    <!-- Search Bar Container -->
+    <div class="search-container">
+      <ion-searchbar
+        [value]="searchQuery"
+        (ionInput)="onSearchChange($event)"
+        placeholder="Tìm kiếm..."
+        class="search-bar">
+      </ion-searchbar>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <ion-button fill="outline" class="action-btn sort-btn" (click)="onSortClick()">
+        <ion-icon name="swap-vertical" slot="start"></ion-icon>
+        ↑↓ Sort
+        <ion-icon name="chevron-down" slot="end" class="chevron-icon"></ion-icon>
+      </ion-button>
+      <ion-button fill="outline" class="action-btn filter-btn" (click)="onFilterClick()">
+        <ion-icon name="options" slot="start"></ion-icon>
+        Filter
+        <ion-badge color="primary" class="filter-badge">{{ activeFilters }}</ion-badge>
+      </ion-button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <!-- Jobs List -->
+    <div class="jobs-list" *ngIf="!loading">
+      <div class="job-card" *ngFor="let job of filteredJobs">
+        <div class="job-info">
+          <div class="job-title">{{ job.title || 'Tiêu đề công việc' }}</div>
+          <div class="job-subtitle">{{ formatJobSubtitle(job) }}</div>
+          <div class="job-updated">Cập nhật vào {{ formatDate(job.updatedAt) }}</div>
+        </div>
+        <ion-button 
+          fill="solid" 
+          color="primary" 
+          class="detail-btn"
+          (click)="onJobClick(job.id)">
+          Detail
+        </ion-button>
+      </div>
+      <div *ngIf="filteredJobs.length === 0" class="no-jobs">
+        Không có công việc nào
+      </div>
+    </div>
+
+    <!-- Pagination Dots -->
+    <div class="pagination-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</ion-content>

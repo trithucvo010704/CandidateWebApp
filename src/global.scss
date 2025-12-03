@@ -1,0 +1,81 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import '@ionic/angular/css/palettes/dark.system.css';
+
+.jd-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e88e5;
+  margin: 32px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #1e88e5;
+}
+
+.jd-preview,
+.job-description {
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.jd-preview p,
+.job-description p {
+  margin-bottom: 16px;
+}
+
+.jd-preview ul,
+.job-description ul,
+.jd-preview ol,
+.job-description ol {
+  margin: 16px 0;
+  padding-left: 32px;
+}
+
+.jd-preview li,
+.job-description li {
+  margin-bottom: 8px;
+}
+
+.jd-sub-list {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding-left: 24px;
+}
+
+.jd-preview strong,
+.job-description strong {
+  color: #d32f2f;
+}

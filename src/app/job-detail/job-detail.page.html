@@ -1,0 +1,125 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="header-title">Candidate</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="recruitment-form-container">
+    <!-- Header Bar -->
+    <div class="header-bar">
+      <h2>TUYỂN DỤNG</h2>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <!-- Job JD Card -->
+    <div *ngIf="!loading && jobDetail" class="job-card jd-card">
+      <div class="job-card-header">
+        {{ jobDetail.title }}
+      </div>
+      <div class="job-card-body">
+        <div class="job-description" [innerHTML]="jobDetail.description | jdFormat"></div>
+      </div>
+    </div>
+
+    <!-- Job Meta Card -->
+    <div *ngIf="!loading && jobDetail" class="job-card meta-card">
+      <div class="job-card-header">Thông tin việc làm</div>
+      <div class="job-card-body meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">MỨC LƯƠNG</div>
+          <div class="meta-value-strong">{{ formatSalary() }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">ĐỊA ĐIỂM</div>
+          <div class="meta-value">
+            {{ jobDetail.location || 'Không có thông tin' }}
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">VÒNG TUYỂN DỤNG</div>
+          <div class="meta-value">
+            {{ jobDetail.roundCount || 1 }}
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">HẠN BÀI ĐĂNG</div>
+          <div class="meta-value-strong">
+            {{ jobDetail.deadline ? formatDate(jobDetail.deadline) : '' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form #applicationForm="ngForm" (ngSubmit)="onSubmit(applicationForm)" *ngIf="!loading && jobDetail">
+
+      <!-- Contact Information Section -->
+      <div class="form-section">
+        <ion-item class="form-item" [class.error]="isFieldInvalid('fullName', applicationForm)">
+          <ion-label position="stacked">Họ và Tên</ion-label>
+          <ion-input [(ngModel)]="formData.fullName" name="fullName" placeholder="Họ và tên" required
+            (ionBlur)="markFieldTouched('fullName')">
+          </ion-input>
+        </ion-item>
+        <div *ngIf="isFieldInvalid('fullName', applicationForm)" class="error-message">
+          Vui lòng nhập họ và tên
+        </div>
+
+        <ion-item class="form-item" [class.error]="isFieldInvalid('phone', applicationForm)">
+          <ion-label position="stacked">Số điện thoại</ion-label>
+          <ion-input [(ngModel)]="formData.phone" name="phone" type="tel" placeholder="Sdt" required
+            pattern="[0-9]{10,11}" (ionBlur)="markFieldTouched('phone')">
+          </ion-input>
+        </ion-item>
+        <div *ngIf="isFieldInvalid('phone', applicationForm)" class="error-message">
+          Vui lòng nhập số điện thoại hợp lệ (10-11 số)
+        </div>
+
+        <ion-item class="form-item" [class.error]="isFieldInvalid('email', applicationForm)">
+          <ion-label position="stacked">Gmail</ion-label>
+          <ion-input [(ngModel)]="formData.email" name="email" type="email" placeholder="...@gmail.com" required email
+            (ionBlur)="markFieldTouched('email')">
+          </ion-input>
+        </ion-item>
+        <div *ngIf="isFieldInvalid('email', applicationForm)" class="error-message">
+          Vui lòng nhập email hợp lệ
+        </div>
+      </div>
+
+      <!-- File Upload -->
+      <div class="form-section">
+        <input type="file" id="file-input" style="display: none" (change)="onFileSelected($event)"
+          accept=".pdf,.doc,.docx">
+        <div class="file-upload-container" [class.error]="fileError">
+          <ion-button fill="outline" class="file-upload-btn" (click)="onFileButtonClick()">
+            File
+          </ion-button>
+          <div class="file-upload-icon">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+          </div>
+        </div>
+        <span *ngIf="formData.file" class="file-name">{{ formData.file.name }}</span>
+        <div *ngIf="fileError" class="error-message">
+          Vui lòng upload CV (PDF, DOC, DOCX)
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <ion-button type="submit" fill="solid" color="primary" class="submit-btn" [disabled]="submitting">
+          <ion-spinner *ngIf="submitting" name="crescent"></ion-spinner>
+          <span *ngIf="!submitting">Confirm</span>
+        </ion-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Toast Message -->
+  <ion-toast [isOpen]="showToast" [message]="toastMessage" [color]="toastColor" [duration]="3000"
+    (didDismiss)="showToast = false">
+  </ion-toast>
+</ion-content>
