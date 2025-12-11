@@ -40,6 +40,12 @@
             {{ jobDetail.location || 'Không có thông tin' }}
           </div>
         </div>
+        <div class="meta-item" *ngIf="jobDetail.yoe !== undefined && jobDetail.yoe !== null">
+          <div class="meta-label">KINH NGHIỆM</div>
+          <div class="meta-value-strong">
+            {{ formatExperience() }}
+          </div>
+        </div>
         <div class="meta-item">
           <div class="meta-label">VÒNG TUYỂN DỤNG</div>
           <div class="meta-value">

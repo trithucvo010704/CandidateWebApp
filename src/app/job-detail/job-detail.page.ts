@@ -307,15 +307,73 @@ export class JobDetailPage implements OnInit {
     }, 3000);
   }
 
+  /**
+   * Format số tiền thành định dạng có dấu chấm ngăn cách
+   * Ví dụ: 10000000 -> "10.000.000"
+   */
+  private formatCurrency(amount: number): string {
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  /**
+   * Format mức lương theo logic từ create-post
+   * - Nếu có cả salaryFrom và salaryTo: "10.000.000 - 20.000.000 VNĐ"
+   * - Nếu chỉ có salaryFrom: "Từ 10.000.000 VNĐ"
+   * - Nếu chỉ có salaryTo: "Lên tới 20.000.000 VNĐ"
+   * - Nếu không có: "Thỏa thuận"
+   */
   formatSalary(): string {
-    if (!this.jobDetail) return '';
-    if (this.jobDetail.salaryFrom && this.jobDetail.salaryTo) {
-      return `${this.jobDetail.salaryFrom} - ${this.jobDetail.salaryTo} triệu`;
+    if (!this.jobDetail) return 'Thỏa thuận';
+
+    if (
+      this.jobDetail.salaryFrom !== undefined &&
+      this.jobDetail.salaryFrom !== null
+    ) {
+      if (
+        this.jobDetail.salaryTo !== undefined &&
+        this.jobDetail.salaryTo !== null
+      ) {
+        // Format: "10.000.000 - 20.000.000 VNĐ"
+        return `${this.formatCurrency(
+          this.jobDetail.salaryFrom
+        )} - ${this.formatCurrency(this.jobDetail.salaryTo)} VNĐ`;
+      } else {
+        // Chỉ có salaryFrom
+        return `Từ ${this.formatCurrency(this.jobDetail.salaryFrom)} VNĐ`;
+      }
+    } else if (
+      this.jobDetail.salaryTo !== undefined &&
+      this.jobDetail.salaryTo !== null
+    ) {
+      // Chỉ có salaryTo
+      return `Lên tới ${this.formatCurrency(this.jobDetail.salaryTo)} VNĐ`;
+    } else {
+      return 'Thỏa thuận';
     }
-    if (this.jobDetail.salaryFrom) {
-      return `Từ ${this.jobDetail.salaryFrom} triệu`;
+  }
+
+  /**
+   * Format số năm kinh nghiệm theo logic từ create-post
+   * - Nếu có yoe và unit: "2 năm" hoặc "6 tháng"
+   * - Nếu chỉ có yoe: "2 năm" (mặc định)
+   * - Nếu không có: "Không yêu cầu"
+   */
+  formatExperience(): string {
+    if (!this.jobDetail) return 'Không yêu cầu';
+
+    if (this.jobDetail.yoe !== undefined && this.jobDetail.yoe !== null) {
+      const unit = this.jobDetail.unit || 'year'; // Mặc định là 'year'
+      const unitLabel = unit === 'month' ? 'tháng' : 'năm';
+
+      // Format số: nếu là số nguyên thì không hiển thị phần thập phân
+      const yoeValue = Number.isInteger(this.jobDetail.yoe)
+        ? this.jobDetail.yoe.toString()
+        : this.jobDetail.yoe.toFixed(1);
+
+      return `${yoeValue} ${unitLabel}`;
     }
-    return '';
+
+    return 'Không yêu cầu';
   }
 
   formatDate(dateString: string): string {
